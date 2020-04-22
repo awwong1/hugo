@@ -345,7 +345,7 @@ func NewBase(p *paths.Paths, logger *loggers.Logger, options ...func(*BaseFs) er
 		logger = loggers.NewWarningLogger()
 	}
 
-	publishFs := afero.NewBasePathFs(fs.Destination, p.AbsPublishDir)
+	publishFs := hugofs.NewBaseFileDecorator(afero.NewBasePathFs(fs.Destination, p.AbsPublishDir))
 
 	b := &BaseFs{
 		PublishFs: publishFs,
@@ -556,6 +556,7 @@ func (b *sourceFilesystemsBuilder) createModFs(
 			From:      mount.Target,
 			To:        filename,
 			ToBasedir: base,
+			Module:    md.Module.Path(),
 			Meta: hugofs.FileMeta{
 				"watch":       md.Watch(),
 				"mountWeight": mountWeight,
